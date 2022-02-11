@@ -3,11 +3,12 @@ import React, { useEffect, useState } from 'react';
 import Header from './components/Header';
 import Card from './components/Card';
 import Form from './components/Form';
-import { getAllCampaigns } from "./solana";
+import { getAllCampaigns, walletConnect } from "./solana";
 const App = () => {
   const [route, setRoute] = useState(0);
   const [cards, setCards] = useState([]);
   useEffect(() => {
+    walletConnect();
     getAllCampaigns().then((val) => {
       setCards(val);
       console.log(val);

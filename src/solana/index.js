@@ -15,13 +15,19 @@ const programId = new PublicKey(
     "DtVe5Jab8MmDtAbyi3XzVsg9mc4NKwJ1AFybq5Xd8U2a"
 );
 
+window.Buffer = window.Buffer || require('buffer').Buffer;
+
+export const walletConnect = async () => {
+    await wallet.connect();
+}
+
 export async function setPayerAndBlockhashTransaction(instructions) {
     const transaction = new Transaction();
     instructions.forEach(element => {
         transaction.add(element);
     });
     transaction.feePayer = wallet.publicKey;
-    let hash = await connection.getLatestBlockhash();
+    let hash = await connection.getRecentBlockhash();
     transaction.recentBlockhash = hash.blockhash;
     return transaction;
 }
@@ -42,11 +48,11 @@ export async function signAndSendTransaction(transaction) {
     }
 }
 
-async function checkWallet() {
-    if (!wallet.connected()) {
-        await wallet.connect();
-    }
-}
+// async function checkWallet() {
+//     if (!wallet.connected()) {
+//         await wallet.connect();
+//     }
+// }
 
 class CampaignDetails {
     constructor(properties) {
@@ -69,7 +75,7 @@ class CampaignDetails {
 export async function createCampaign(
     name, description, image_link
 ) {
-    await checkWallet();
+    // await checkWallet();
     const SEED = "abcdef" + Math.random().toString();
     let newAccount = await PublicKey.createWithSeed(
         wallet.publicKey,
@@ -144,7 +150,7 @@ export async function getAllCampaigns() {
 export async function donateToCampaign(
     campaignPubKey, amount
 ) {
-    await checkWallet();
+    // await checkWallet();
 
     const SEED = "abcdef" + Math.random().toString();
     let newAccount = await PublicKey.createWithSeed(
@@ -201,7 +207,7 @@ class WithdrawRequest {
 export async function withdraw(
     campaignPubKey, amount
 ) {
-    await checkWallet();
+    // await checkWallet();
     let withdrawRequest = new WithdrawRequest({ amount: amount });
     let data = serialize(WithdrawRequest.schema, withdrawRequest);
     let data_to_send = new Uint8Array([1, ...data]);
